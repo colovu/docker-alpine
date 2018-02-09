@@ -11,6 +11,7 @@
 
 
 
+
 ## 基本信息
 
 * 镜像地址：endial/base-alpine:v3.6
@@ -18,9 +19,10 @@
 
 
 
+
 ## 数据卷
 
-该容器没有定义默认的数据卷。
+该容器没有定义默认的数据卷。该容器仅用作创建其他业务容器的基础容器。
 
 
 
@@ -31,22 +33,28 @@
 启动命令
 
 ```
-docker run --rm --name alpine -d -it endial/base-alpine:v3.6 /bin/sh
+docker run --rm --name test -d endial/base-alpine:v3.6 tail /dev/stderr
 ```
+
+
 
 以该方式启动后，如果想进入容器，可以使用以下命令：
 
 ```
-docker exec -it alpine /bin/sh
+docker exec -it test /bin/sh
 ```
+
+
 
 ### 命令行方式启动
 
 启动命令
 
 ```
-docker run --rm --name alpine -it endial/base-alpine:v3.6 /bin/sh
+docker run --rm --name test -it endial/base-alpine:v3.6 /bin/sh
 ```
+
+
 
 以该方式启动后，直接进入容器的命令行操作界面。如果需要退出，直接使用命令`exit`退出。
 
