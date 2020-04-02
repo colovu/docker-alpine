@@ -6,7 +6,8 @@
 
 ## 历史版本
 
-* v3.6, latest: 当前版本，基于Alpine 3.6
+* v3.11, latest: 基于Alpine 3.11
+* v3.6: 基于Alpine 3.6
 * v3.5: 基于Alpine 3.5
 
 
@@ -14,7 +15,7 @@
 
 ## 基本信息
 
-* 镜像地址：endial/base-alpine:v3.6
+* 镜像地址：endial/base-alpine:v3.11
 * 依赖镜像：alpine
 
 
@@ -33,7 +34,7 @@
 启动命令
 
 ```
-docker run --rm --name test -d endial/base-alpine:v3.6 tail /dev/stderr
+docker run --rm --name test -d endial/base-alpine:v3.11 tail /dev/stderr
 ```
 
 
@@ -51,7 +52,7 @@ docker exec -it test /bin/sh
 启动命令
 
 ```
-docker run --rm --name test -it endial/base-alpine:v3.6 /bin/sh
+docker run --rm --name test -it endial/base-alpine:v3.11 /bin/sh
 ```
 
 

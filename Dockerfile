@@ -1,8 +1,8 @@
-FROM alpine:3.6
+FROM alpine:3.11
 
 MAINTAINER Endial Fang ( endial@126.com )
 
-RUN echo "http://mirrors.ustc.edu.cn/alpine/v3.6/main" >> /etc/apk/repositories \
-  && echo "http://mirrors.ustc.edu.cn/alpine/v3.6/community" >> /etc/apk/repositories
+RUN echo "http://mirrors.ustc.edu.cn/alpine/v3.11/main" >> /etc/apk/repositories \
+  && echo "http://mirrors.ustc.edu.cn/alpine/v3.11/community" >> /etc/apk/repositories
 
 CMD []
