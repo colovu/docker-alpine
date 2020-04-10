@@ -4,8 +4,8 @@ ENV GOSU_VERSION 1.11
 
 RUN set -eux; \
 	\
-	echo "http://mirrors.ustc.edu.cn/alpine/v3.11/main" > /etc/apk/repositories; \
-	echo "http://mirrors.ustc.edu.cn/alpine/v3.11/community" >> /etc/apk/repositories; \
+	echo "http://mirrors.aliyun.com/alpine/v3.11/main" > /etc/apk/repositories; \
+	echo "http://mirrors.aliyun.com/alpine/v3.11/community" >> /etc/apk/repositories; \
 	\
 	apk add --no-cache --virtual .gosu-deps \
 		dpkg \
