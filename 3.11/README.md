@@ -7,7 +7,7 @@
 ## 基本信息
 
 * 镜像地址：endial/alpine:v3.11
-* 依赖镜像：alpine:3.11
+  * 依赖镜像：alpine:3.11
 
 
 
@@ -51,7 +51,7 @@ docker images
 
 ### 服务方式启动
 
-启动命令
+启动命令：
 
 ```
 docker run -d --name test -d endial/alpine:v3.11 tail /dev/stderr
@@ -74,7 +74,7 @@ docker exec -it test /bin/sh
 
 ### 命令行方式启动
 
-启动命令
+启动命令：
 
 ```
 docker run --rm -it endial/alpine:v3.11 /bin/sh
@@ -86,4 +86,10 @@ docker run --rm -it endial/alpine:v3.11 /bin/sh
 - `/bin/sh`：在容器中执行`/bin/sh`命令
 
 以该方式启动后，直接进入容器的命令行操作界面。如果需要退出，直接使用命令`exit`退出。
+
+
+
+----
+
+本文原始来源 [Endial Fang](https://github.com/endial) @ [Github.com](https://github.com)
 
