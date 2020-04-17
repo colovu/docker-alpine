@@ -3,7 +3,7 @@ FROM alpine:3.6
 LABEL \
         "Version"="v3.6" \
         "Description"="Alpine Image based on Alpine 3.6." \
-        "Dockerfile"="https://github.com/endial/docker-libs" \
+        "Dockerfile"="https://github.com/endial/docker-alpine" \
         "Vendor"="Endial Fang (endial@126.com)"
 
 RUN set -eux \
