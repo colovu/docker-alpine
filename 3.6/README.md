@@ -6,7 +6,7 @@
 
 ## 基本信息
 
-* 镜像地址：endial/alpine:v3.6
+* 镜像地址：endial/alpine:3.6
   * 依赖镜像：alpine:3.6
 
 
@@ -37,7 +37,7 @@
 下载镜像：
 
 ```shell
-docker pull endial/alpine:v3.6
+docker pull endial/alpine:3.6
 ```
 
 查看镜像：
@@ -53,12 +53,12 @@ docker images
 启动命令：
 
 ```
-docker run -d --name test -d endial/alpine:v3.6 tail /dev/stderr
+docker run -d --name test -d endial/alpine:3.6 tail /dev/stderr
 ```
 
 - `--name test`：命名容器为`test`
 - `-d`：以后台进程方式启动容器
-- `endial/alpine:v3.6`：包含版本信息的镜像名称
+- `endial/alpine:3.6`：包含版本信息的镜像名称
 - `tail /dev/stderr`：在容器中执行`tail /dev/stderr`命令，以防止容器直接退出
 
 
@@ -76,12 +76,12 @@ docker exec -it test /bin/sh
 启动命令：
 
 ```
-docker run --rm -it endial/alpine:v3.6 /bin/sh
+docker run --rm -it endial/alpine:3.6 /bin/sh
 ```
 
 - `-it`：使用交互式终端启动容器
 - `--rm`：退出时删除容器
-- `endial/alpine:v3.6`：包含版本信息的镜像名称
+- `endial/alpine:3.6`：包含版本信息的镜像名称
 - `/bin/sh`：在容器中执行`/bin/sh`命令
 
 以该方式启动后，直接进入容器的命令行操作界面。如果需要退出，直接使用命令`exit`退出。
