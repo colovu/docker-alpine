@@ -1,6 +1,6 @@
 # Alpine
 
-简单、高性能、小体积的基础系统镜像，本镜像基于Alpine系统。
+简单、高性能、小体积的基础系统镜像，本镜像基于[Alpine系统](http://www.alpinelinux.org)。
 
 
 
@@ -13,7 +13,7 @@
 **镜像信息：**
 
 * 镜像地址：colovu/alpine:latest
-  * 依赖镜像：alpine:3.11
+  * 依赖镜像：alpine:TAG
 
 
 
@@ -25,6 +25,8 @@
   http://mirrors.aliyun.com/alpine/v3.11/main
   http://mirrors.aliyun.com/alpine/v3.11/community
   ```
+
+- 增加bash
 
 - 增加gosu
 
@@ -47,6 +49,10 @@
 docker pull colovu/alpine:latest
 ```
 
+- latest：为镜像的TAG，可针对性选择不同的TAG进行下载
+
+
+
 查看镜像：
 
 ```shell
@@ -59,20 +65,20 @@ docker images
 
 启动命令：
 
-```
+```shell
 docker run -d --name test -d colovu/alpine:latest tail /dev/stderr
 ```
 
 - `--name test`：命名容器为`test`
 - `-d`：以后台进程方式启动容器
-- `endial/alpine:latest：包含TAG信息的镜像名称
+- `colovu/alpine:latest`：包含TAG信息的镜像名称
 - `tail /dev/stderr`：在容器中执行`tail /dev/stderr`命令，以防止容器直接退出
 
 
 
 以该方式启动后，如果想进入容器，可以使用以下命令：
 
-```
+```shell
 docker exec -it test /bin/sh
 ```
 
@@ -82,14 +88,14 @@ docker exec -it test /bin/sh
 
 启动命令：
 
-```
-docker run --rm -it colovu/alpine:latest /bin/sh
+```shell
+docker run -it --rm colovu/alpine:latest /bin/sh
 ```
 
 - `-it`：使用交互式终端启动容器
 - `--rm`：退出时删除容器
-- `endial/alpine:latest`：包含版本信息的镜像名称
-- `/bin/sh`：在容器中执行`/bin/sh`命令
+- `colovu/alpine:latest`：包含版本信息的镜像名称
+- `/bin/sh`：在容器中执行`/bin/sh`命令；如果不执行命令，容器会在启动后立即结束并退出。
 
 以该方式启动后，直接进入容器的命令行操作界面。如果需要退出，直接使用命令`exit`退出。
 
@@ -97,5 +103,5 @@ docker run --rm -it colovu/alpine:latest /bin/sh
 
 ----
 
-本文原始来源 [Endial Fang](https://github.com/endial) @ [Github.com](https://github.com)
+本文原始来源 [Endial Fang](https://github.com/colovu) @ [Github.com](https://github.com)
 

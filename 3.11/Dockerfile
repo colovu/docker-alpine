@@ -15,6 +15,8 @@ RUN set -eux; \
 	echo "http://mirrors.aliyun.com/alpine/v3.11/main" > /etc/apk/repositories; \
 	echo "http://mirrors.aliyun.com/alpine/v3.11/community" >> /etc/apk/repositories; \
 	\
+	apk update; \
+	apk add --no-cache bash; \
 # 安装依赖软件包
 	apk add --no-cache --virtual .gosu-deps \
 		dpkg \
@@ -44,8 +46,5 @@ RUN set -eux; \
 	chmod +x /usr/local/bin/gosu; \
 # 验证安装的应用软件是否正常
 	gosu nobody true
-
-# RUN echo "http://dl-cdn.alpinelinux.org/alpine/v3.11/main" >> /etc/apk/repositories \
-#   && echo "http://dl-cdn.alpinelinux.org/alpine/v3.11/community" >> /etc/apk/repositories
 
 CMD []
