@@ -6,7 +6,8 @@
 
 **版本信息：**
 
-- 3.11、latest
+- 3.12、latest
+- 3.11
 
 
 
@@ -22,8 +23,8 @@
 - 修改默认源为阿里云镜像
 
   ```shell
-  http://mirrors.aliyun.com/alpine/v3.11/main
-  http://mirrors.aliyun.com/alpine/v3.11/community
+  http://mirrors.aliyun.com/alpine/v3.12/main
+  http://mirrors.aliyun.com/alpine/v3.12/community
   ```
 
 - 增加bash

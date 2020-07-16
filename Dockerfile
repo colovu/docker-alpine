@@ -1,8 +1,8 @@
-FROM alpine:3.11
+FROM alpine:3.12
 
 LABEL \
-        "Version"="v3.11" \
-        "Description"="Alpine Image based on Alpine 3.11." \
+        "Version"="v3.12" \
+        "Description"="Alpine Image based on Alpine 3.12." \
         "Dockerfile"="https://github.com/colovu/docker-alpine" \
         "Vendor"="Endial Fang (endial@126.com)"
 
@@ -12,8 +12,8 @@ ENV GOSU_VERSION=1.12 \
 RUN set -eux; \
 	\
 # 修改默认软件源为阿里云软件源
-	echo "http://mirrors.aliyun.com/alpine/v3.11/main" > /etc/apk/repositories; \
-	echo "http://mirrors.aliyun.com/alpine/v3.11/community" >> /etc/apk/repositories; \
+	echo "http://mirrors.aliyun.com/alpine/v3.12/main" > /etc/apk/repositories; \
+	echo "http://mirrors.aliyun.com/alpine/v3.12/community" >> /etc/apk/repositories; \
 	\
 	apk update; \
 	apk add --no-cache bash; \
