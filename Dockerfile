@@ -6,9 +6,6 @@ LABEL \
         "Dockerfile"="https://github.com/colovu/docker-alpine" \
         "Vendor"="Endial Fang (endial@126.com)"
 
-ENV GOSU_VERSION=1.12 \
-	GPG_KEYS="0xB42F6819007F00F88E364FD4036A9C25BF357DD4"
-
 RUN set -eux; \
 	\
 # 修改默认软件源为阿里云软件源
@@ -24,11 +21,13 @@ RUN set -eux; \
 	; \
 	\
 # 安装应用软件
+	export GOSU_VERSION=1.12; \
 	dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')"; \
 	wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch"; \
 	wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc"; \
 	\
 # 安装软件包需要使用的GPG证书
+	export GPG_KEYS="0xB42F6819007F00F88E364FD4036A9C25BF357DD4"; \
 	export GNUPGHOME="$(mktemp -d)"; \
 	for key in ${GPG_KEYS}; do \
 		gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys "${key}"|| \
