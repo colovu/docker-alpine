@@ -1,4 +1,4 @@
-# Alpine
+# 简介
 
 简单、高性能、小体积的基础系统镜像，本镜像基于[Alpine系统](http://www.alpinelinux.org)。
 
@@ -9,42 +9,24 @@
 - 3.12、latest
 - 3.11
 
-
-
 **镜像信息：**
 
 * 镜像地址：colovu/alpine:latest
   * 依赖镜像：alpine:TAG
 
+**与官方镜像差异：**
 
+- 增加 `default、tencent、ustc、aliyun、huawei` 源配置文件，可在编译时通过 `ARG` 变量`apt_source`进行选择
 
-与官方镜像差异：
-
-- 修改默认源为阿里云镜像
-
-  ```shell
-  http://mirrors.aliyun.com/alpine/v3.12/main
-  http://mirrors.aliyun.com/alpine/v3.12/community
-  ```
-
+- 更新已安装的软件包
 - 增加bash
-
 - 增加gosu
-
-
-
-
-## 数据卷
-
-该容器没有定义默认的数据卷。该容器仅用作创建其他业务容器的基础容器。
 
 
 
 ## 使用说明
 
-### 镜像管理
-
-下载镜像：
+**下载镜像：**
 
 ```shell
 docker pull colovu/alpine:latest
@@ -52,22 +34,29 @@ docker pull colovu/alpine:latest
 
 - latest：为镜像的TAG，可针对性选择不同的TAG进行下载
 
-
-
-查看镜像：
+**查看镜像：**
 
 ```shell
 docker images
 ```
 
-
-
-### 服务方式启动
-
-启动命令：
+**命令行方式运行容器：**
 
 ```shell
-docker run -d --name test -d colovu/alpine:latest tail /dev/stderr
+docker run -it --rm colovu/alpine:latest /bin/sh
+```
+
+- `-it`：使用交互式终端启动容器
+- `--rm`：退出时删除容器
+- `colovu/alpine:latest`：包含版本信息的镜像名称
+- `/bin/sh`：在容器中执行`/bin/sh`命令；如果不执行命令，容器会在启动后立即结束并退出。
+
+以该方式启动后，直接进入容器的命令行操作界面。如果需要退出，直接使用命令`exit`退出。
+
+**后台方式运行容器：**
+
+```shell
+docker run -d --name test colovu/alpine:latest tail /dev/stderr
 ```
 
 - `--name test`：命名容器为`test`
@@ -83,22 +72,9 @@ docker run -d --name test -d colovu/alpine:latest tail /dev/stderr
 docker exec -it test /bin/sh
 ```
 
-
-
-### 命令行方式启动
-
-启动命令：
-
-```shell
-docker run -it --rm colovu/alpine:latest /bin/sh
-```
-
-- `-it`：使用交互式终端启动容器
-- `--rm`：退出时删除容器
-- `colovu/alpine:latest`：包含版本信息的镜像名称
-- `/bin/sh`：在容器中执行`/bin/sh`命令；如果不执行命令，容器会在启动后立即结束并退出。
-
-以该方式启动后，直接进入容器的命令行操作界面。如果需要退出，直接使用命令`exit`退出。
+- `-it`：使用交互式执行
+- `test`：之前启动的容器名
+- `/bin/sh`：执行的命令
 
 
 
