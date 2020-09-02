@@ -1,6 +1,6 @@
-# Ver: 1.0 by Endial Fang (endial@126.com)
+# Ver: 1.1 by Endial Fang (endial@126.com)
 #
-FROM alpine:3.12
+FROM colovu/alpine-builder as builder
 
 # ARG参数使用"--build-arg"指定，如 "--build-arg apt_source=tencent"
 # sources.list 可使用版本：default / tencent / ustc / aliyun / huawei
@@ -11,34 +11,11 @@ ARG local_url=""
 
 ARG gosu_ver=1.12
 
-LABEL \
-        "Version"="v3.12" \
-        "Description"="Alpine image for Alpine 3.12." \
-        "Dockerfile"="https://github.com/colovu/docker-alpine" \
-        "Vendor"="Endial Fang (endial@126.com)"
-
-COPY sources/* /etc/apk/
-
 RUN set -eux; \
-	\
-# 更改源为当次编译指定的源
-	cp /etc/apk/repositories.${apt_source} /etc/apk/repositories; \
-	\
-	apk update; \
-	apk upgrade --no-cache;\
-	apk add --no-cache bash; \
-	\
-# 安装依赖软件包
-	apk add --no-cache --virtual .fetch-deps \
-		dpkg \
-		gnupg \
-	; \
-	\
-# 安装应用软件
 	dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')"; \
 	if [ -n "${local_url}" ]; then \
-		wget -O /usr/local/bin/gosu "${local_url}/gosu-${dpkgArch}"; \
-		wget -O /usr/local/bin/gosu.asc "${local_url}/gosu-${dpkgArch}.asc"; \
+		wget -O /usr/local/bin/gosu "${local_url}/gosu/gosu-${dpkgArch}"; \
+		wget -O /usr/local/bin/gosu.asc "${local_url}/gosu/gosu-${dpkgArch}.asc"; \
 	else \
 		wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/${gosu_ver}/gosu-$dpkgArch"; \
 		wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/${gosu_ver}/gosu-$dpkgArch.asc"; \
@@ -55,15 +32,37 @@ RUN set -eux; \
 	done; \
 	gpg --batch --verify "/usr/local/bin/gosu.asc" "/usr/local/bin/gosu"; \
 	command -v gpgconf > /dev/null && gpgconf --kill all; \
-	rm -rf "$GNUPGHOME"; \
 	\
 	chmod +x /usr/local/bin/gosu; \
-	rm -rf /usr/local/bin/gosu.asc; \
-	\
-# 删除安装的依赖软件包
-	apk del --no-network .fetch-deps; \
 	\
 # 验证安装的应用软件是否正常
 	gosu nobody true;
+
+# 镜像生成
+FROM alpine:3.12
+ARG apt_source=default
+
+LABEL \
+        "Version"="v3.12" \
+        "Description"="Alpine image for Alpine 3.12." \
+        "Dockerfile"="https://github.com/colovu/docker-alpine" \
+        "Vendor"="Endial Fang (endial@126.com)"
+
+COPY sources/* /etc/apk/
+
+RUN set -eux; \
+	cp /etc/apk/repositories.${apt_source} /etc/apk/repositories; \
+	\
+	apk update; \
+	apk upgrade --no-cache; \
+	apk add --no-cache bash tini; \
+	\
+	rm -rf /var/cache/apk/*; \
+	rm -rf /root/.cache; \
+	rm -rf /tmp/*; 
+
+COPY --from=builder /usr/local/bin/gosu /usr/local/bin/
+
+WORKDIR /srv/data
 
 CMD []
