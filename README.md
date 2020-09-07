@@ -20,9 +20,10 @@
 - 增加常用 Shell 脚本文件
 - 更新已安装的软件包
 - 增加`locales`，并设置默认编码格式为`en_US.utf8`
-- 增加bash
-- 增加gosu
+- 增加 bash
+- 增加 gosu
 - 设置默认时区信息为 `Asia/Shanghai`
+- 默认增加 nss_wrapper 支持
 
 
 
