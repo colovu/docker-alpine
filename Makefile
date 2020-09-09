@@ -16,7 +16,7 @@ build-arg:=--build-arg apt_source=aliyun
 
 # 设置本地下载服务器路径，加速调试时的本地编译速度
 local_ip:=`ifconfig -a|grep inet|grep -v 127.0.0.1|grep -v inet6|awk '{print $$2}'|tr -d "addr:"`
-build-arg+=--build-arg local_url=http://$(local_ip)/dist-files/
+build-arg+=--build-arg local_url=http://$(local_ip)/dist-files
 
 .PHONY: build clean clearclean upgrade
 
