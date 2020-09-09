@@ -154,7 +154,7 @@ case "$1" in
 		if which bsdtar >/dev/null 2>&1; then
   			bsdtar -xf $CACHE_ROOT/$PACKAGE
 		else
-  			tar xzf $CACHE_ROOT/$PACKAGE
+  			tar xzf $CACHE_ROOT/$PACKAGE --no-same-owner
 		fi
 		;;
 esac
