@@ -51,6 +51,8 @@ FROM alpine:3.12
 ARG apt_source=default
 ARG local_url=""
 
+ENV APP_NAME=alpine-base
+
 LABEL   "Version"="v3.12" \
 	"Description"="Alpine image for Alpine 3.12." \
 	"Dockerfile"="https://github.com/colovu/docker-alpine" \
