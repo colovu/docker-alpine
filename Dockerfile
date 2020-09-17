@@ -61,8 +61,7 @@ LABEL   "Version"="v3.12" \
 COPY prebuilds /
 RUN select_source ${apt_source}
 RUN install_pkg bash tini tzdata; \
-	cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime; \
-	apk del tzdata; 
+	cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime;
 RUN apk add --no-cache libintl; \
 	apk add --no-cache --virtual .locale_build git cmake make musl-dev gcc gettext-dev; \
 	git clone https://gitlab.com/rilian-la-te/musl-locales; \
