@@ -66,14 +66,14 @@ LABEL \
 COPY prebuilds /
 
 # 从预处理过程中拷贝软件包
-COPY --from=builder /usr/local/lib64/libnss_wrapper.so /usr/lib/
 COPY --from=builder /usr/local/bin/gosu-amd64 /usr/local/bin/gosu
+COPY --from=builder /usr/local/lib64/libnss_wrapper.so /usr/lib/
 
 # 选择软件包源(Optional)，以加速后续软件包安装
 RUN select_source ${apt_source}
 
 # 配置时区默认为 Shanghai
-RUN install_pkg bash tini tzdata; \
+RUN install_pkg bash tini tzdata curl; \
 	cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime;
 
 # 增加musl版本的locales支持，并设置默认为 UTF-8
