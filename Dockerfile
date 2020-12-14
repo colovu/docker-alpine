@@ -1,19 +1,22 @@
-# Ver: 1.2 by Endial Fang (endial@126.com)
+# Ver: 1.4 by Endial Fang (endial@126.com)
 #
 
 # 预处理 =========================================================================
-FROM colovu/abuilder as builder
+ARG registry_url="registry.cn-shenzhen.aliyuncs.com"
+FROM ${registry_url}/colovu/abuilder as builder
 
 # sources.list 可使用版本：default / tencent / ustc / aliyun / huawei
-ARG apt_source=default
+ARG apt_source=aliyun
 
 # 编译镜像时指定用于加速的本地服务器地址
 ARG local_url=""
 
 WORKDIR /usr/local
 
+# 选择软件包源(Optional)，以加速后续软件包安装
 RUN select_source ${apt_source};
 
+# 下载并解压软件包
 RUN set -eux; \
 	appVersion=1.12; \
 	appName=gosu-"$(dpkg --print-architecture | awk -F- '{ print $NF }')"; \
@@ -48,20 +51,32 @@ RUN set -ex; \
 # 镜像生成 ========================================================================
 FROM alpine:3.12
 
-ARG apt_source=default
-ARG local_url=""
+# sources.list 可使用版本：default / tencent / ustc / aliyun / huawei
+ARG apt_source=aliyun
 
-ENV APP_NAME=alpine-base
+ENV APP_NAME=alpine-os
 
-LABEL   "Version"="v3.12" \
-	"Description"="Alpine image for Alpine 3.12." \
+LABEL \
+	"Version"="v3.12" \
+	"Description"="Docker image for Alpine OS v3.12." \
 	"Dockerfile"="https://github.com/colovu/docker-alpine" \
 	"Vendor"="Endial Fang (endial@126.com)"
 
+# 拷贝默认的通用脚本文件
 COPY prebuilds /
+
+# 从预处理过程中拷贝软件包
+COPY --from=builder /usr/local/lib64/libnss_wrapper.so /usr/lib/
+COPY --from=builder /usr/local/bin/gosu-amd64 /usr/local/bin/gosu
+
+# 选择软件包源(Optional)，以加速后续软件包安装
 RUN select_source ${apt_source}
+
+# 配置时区默认为 Shanghai
 RUN install_pkg bash tini tzdata; \
 	cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime;
+
+# 增加musl版本的locales支持，并设置默认为 UTF-8
 RUN apk add --no-cache libintl; \
 	apk add --no-cache --virtual .locale_build git cmake make musl-dev gcc gettext-dev; \
 	git clone https://gitlab.com/rilian-la-te/musl-locales; \
@@ -69,20 +84,18 @@ RUN apk add --no-cache libintl; \
 	cd .. && rm -r musl-locales; \
 	apk del .locale_build; \
 	rm -rf /var/cache/apk/*;
+ENV LANG=en_US.UTF-8 \
+	LANGUAGE=en_US.UTF-8 \
+	LC_ALL=en_US.UTF-8
 
-COPY --from=builder /usr/local/lib64/libnss_wrapper.so /usr/lib/
-COPY --from=builder /usr/local/bin/gosu-amd64 /usr/local/bin/gosu
-
+# 执行预处理脚本，并验证安装的软件包
 RUN set -eux; \
-# 验证安装的应用软件是否正常
 	gosu nobody true; \
 	gosu --version; \
 	tini --version;
 
 WORKDIR /
 
-ENV LANG=en_US.UTF-8 \
-	LANGUAGE=en_US.UTF-8 \
-	LC_ALL=en_US.UTF-8
-
+# 应用程序的服务命令，必须使用非守护进程方式运行。如果使用变量，则该变量必须在运行环境中存在（ENV可以获取）
 CMD []
+
