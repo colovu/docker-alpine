@@ -1,64 +1,71 @@
-# Ver: 1.4 by Endial Fang (endial@126.com)
+# Ver: 1.8 by Endial Fang (endial@126.com)
 #
 
-# 预处理 =========================================================================
-ARG registry_url="registry.cn-shenzhen.aliyuncs.com"
-FROM ${registry_url}/colovu/abuilder as builder
+# 可变参数 ========================================================================
 
-# sources.list 可使用版本：default / tencent / ustc / aliyun / huawei
+# 设置当前应用名称及版本
+ARG app_name=alpine
+ARG app_version=3.12
+
+# 设置默认仓库地址，默认为 阿里云 仓库
+ARG registry_url="registry.cn-shenzhen.aliyuncs.com"
+
+# 设置 apt-get 源：default / tencent / ustc / aliyun / huawei
 ARG apt_source=aliyun
 
 # 编译镜像时指定用于加速的本地服务器地址
 ARG local_url=""
 
-WORKDIR /usr/local
+# 0. 预处理 ======================================================================
+#FROM ${registry_url}/colovu/abuilder as builder
+
+# 声明需要使用的全局可变参数
+#ARG app_name
+#ARG app_version
+#ARG registry_url
+#ARG apt_source
+#ARG local_url
+
+
+#WORKDIR /tmp
 
 # 选择软件包源(Optional)，以加速后续软件包安装
-RUN select_source ${apt_source};
-
-# 下载并解压软件包
-RUN set -eux; \
-	appVersion=1.12; \
-	appName=gosu-"$(dpkg --print-architecture | awk -F- '{ print $NF }')"; \
-	appKeys="0xB42F6819007F00F88E364FD4036A9C25BF357DD4"; \
-	[ ! -z ${local_url} ] && localURL=${local_url}/gosu; \
-	appUrls="${localURL:-} \
-		https://github.com/tianon/gosu/releases/download/${appVersion} \
-		"; \
-	download_pkg install ${appName} "${appUrls}" -g "${appKeys}"; \
-	chmod +x /usr/local/bin/${appName};
+#RUN select_source ${apt_source};
 
 # 增加 NSS_WRAPPER 支持
-RUN set -ex; \
-	mkdir -p /usr/local/include; \
-	echo -e "#ifndef NSS__H\n#define NSS__H\n\nenum nss_status\n{\n\tNSS_STATUS_TRYAGAIN = -2,\n\tNSS_STATUS_UNAVAIL,\n\tNSS_STATUS_NOTFOUND,\n\tNSS_STATUS_SUCCESS,\n\tNSS_STATUS_RETURN\n};\n\n#endif\n" > /usr/local/include/nss.h; \
- 	appVersion=1.1.11; \
-	appName=nss_wrapper-${appVersion}.tar.gz; \
-	[ ! -z ${local_url} ] && localURL=${local_url}/cwrap; \
-	appUrls="${localURL} \
-		https://ftp.samba.org/pub/cwrap \
-		"; \
-	download_pkg unpack ${appName} "${appUrls}"; \
- 	mkdir nss_wrapper-${appVersion}/build; \
- 		(cd nss_wrapper-${appVersion}/build; \
- 		cmake .. -DUNIT_TESTING:BOOL=ON; \
- 		make -j "$(nproc)"; \
- 		find . -name nss.h -print; \
-# 		make -j "$(nproc)" CTEST_OUTPUT_ON_FAILURE=TRUE test; \
- 		make install);
+#RUN set -ex; \
+#	mkdir -p /usr/local/include; \
+#	echo -e "#ifndef NSS__H\n#define NSS__H\n\nenum nss_status\n{\n\tNSS_STATUS_TRYAGAIN = -2,\n\tNSS_STATUS_UNAVAIL,\n\tNSS_STATUS_NOTFOUND,\n\tNSS_STATUS_SUCCESS,\n\tNSS_STATUS_RETURN\n};\n\n#endif\n" > /usr/local/include/nss.h; \
+# 	appVersion=1.1.11; \
+#	appName=nss_wrapper-${appVersion}.tar.gz; \
+#	[ ! -z ${local_url} ] && localURL=${local_url}/cwrap; \
+#	appUrls="${localURL} \
+#		https://ftp.samba.org/pub/cwrap \
+#		"; \
+#	download_pkg unpack ${appName} "${appUrls}"; \
+# 	mkdir nss_wrapper-${appVersion}/build; \
+# 		(cd nss_wrapper-${appVersion}/build; \
+# 		cmake .. -DUNIT_TESTING:BOOL=ON; \
+# 		make -j "$(nproc)"; \
+# 		find . -name nss.h -print; \
+# 		make install);
 
 
-# 镜像生成 ========================================================================
-FROM alpine:3.12
+# 1. 生成镜像 =====================================================================
+FROM alpine:${app_version}
 
-# sources.list 可使用版本：default / tencent / ustc / aliyun / huawei
-ARG apt_source=aliyun
+# 声明需要使用的全局可变参数
+ARG app_name
+ARG app_version
+ARG registry_url
+ARG apt_source
+ARG local_url
 
 ENV APP_NAME=alpine-os
 
 LABEL \
-	"Version"="v3.12" \
-	"Description"="Docker image for Alpine OS v3.12." \
+	"Version"="v${app_version}" \
+	"Description"="Docker image for Alpine OS v${app_version}." \
 	"Dockerfile"="https://github.com/colovu/docker-alpine" \
 	"Vendor"="Endial Fang (endial@126.com)"
 
@@ -66,15 +73,12 @@ LABEL \
 COPY prebuilds /
 
 # 从预处理过程中拷贝软件包
-COPY --from=builder /usr/local/bin/gosu-amd64 /usr/local/bin/gosu
-COPY --from=builder /usr/local/lib64/libnss_wrapper.so /usr/lib/
+#COPY --from=builder /usr/local/lib64/libnss_wrapper.so /usr/lib/
 
 # 选择软件包源(Optional)，以加速后续软件包安装
 RUN select_source ${apt_source}
 
-# 配置时区默认为 Shanghai
-RUN install_pkg bash tini tzdata curl; \
-	cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime;
+
 
 # 增加musl版本的locales支持，并设置默认为 UTF-8
 RUN apk add --no-cache libintl; \
@@ -84,18 +88,16 @@ RUN apk add --no-cache libintl; \
 	cd .. && rm -r musl-locales; \
 	apk del .locale_build; \
 	rm -rf /var/cache/apk/*;
+
+# 配置时区默认为 Shanghai
+RUN install_pkg bash tzdata curl; \
+	cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime;
+	
 ENV LANG=en_US.UTF-8 \
 	LANGUAGE=en_US.UTF-8 \
 	LC_ALL=en_US.UTF-8
-
-# 执行预处理脚本，并验证安装的软件包
-RUN set -eux; \
-	gosu nobody true; \
-	gosu --version; \
-	tini --version;
 
 WORKDIR /
 
 # 应用程序的服务命令，必须使用非守护进程方式运行。如果使用变量，则该变量必须在运行环境中存在（ENV可以获取）
 CMD []
-
