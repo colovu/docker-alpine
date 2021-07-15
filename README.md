@@ -7,12 +7,15 @@
 
 **版本信息：**
 
-- 3.12、latest
+- 3.13、latest
+- 3.12
 
 **镜像信息：**
 
-* 镜像地址：registry.cn-shenzhen.aliyuncs.com/colovu/alpine:latest
-  * 依赖镜像：alpine:3.12
+* 镜像地址：
+  * 阿里云: registry.cn-shenzhen.aliyuncs.com/colovu/alpine:3.13
+  * Docker Hub: colovu/alpine:3.13
+  * 依赖镜像：alpine:3.13
 
 **与官方镜像差异：**
 
@@ -21,18 +24,17 @@
 - 更新已安装的软件包
 - 增加`locales`，并设置默认编码格式为`en_US.utf8`
 - 增加`bash`
-- 增加`gosu`
 - 设置默认时区信息为 `Asia/Shanghai`
 - 默认增加 nss_wrapper 支持
 - 默认增加 curl 软件，用作镜像健康检查
 
 
-## **TL;DR**
+## TL;DR
 
 Docker 快速启动命令：
 
 ```shell
-$ docker run -it registry.cn-shenzhen.aliyuncs.com/colovu/alpine /bin/bash
+$ docker run -it colovu/alpine:3.13 /bin/bash
 ```
 
 
@@ -46,10 +48,10 @@ $ docker run -it registry.cn-shenzhen.aliyuncs.com/colovu/alpine /bin/bash
 **下载镜像：**
 
 ```shell
-$ docker pull registry.cn-shenzhen.aliyuncs.com/colovu/alpine:latest
+$ docker pull colovu/alpine:<TAG>
 ```
 
-- latest：为镜像的 TAG，可针对性选择不同的 TAG 进行下载
+- <TAG>：为镜像的 TAG，可针对性选择不同的 TAG 进行下载
 - 不指定 TAG 时，默认下载 latest 镜像
 
 **查看镜像：**
@@ -61,12 +63,12 @@ $ docker images
 **命令行方式运行容器：**
 
 ```shell
-$ docker run -it --rm registry.cn-shenzhen.aliyuncs.com/colovu/alpine:latest /bin/bash
+$ docker run -it --rm colovu/alpine:3.13 /bin/bash
 ```
 
 - `-it`：使用交互式终端启动容器
 - `--rm`：退出时删除容器
-- `registry.cn-shenzhen.aliyuncs.com/colovu/alpine:latest`：包含版本信息的镜像地址及名称
+- `colovu/alpine:3.13`：镜像名称及版本标签；标签不指定时默认使用`latest`
 - `/bin/bash`：在容器中执行`/bin/bash`命令；如果不执行命令，容器会在启动后立即结束并退出。
 
 以该方式启动后，直接进入容器的命令行操作界面。如果需要退出，直接使用命令`exit`退出。
@@ -74,12 +76,12 @@ $ docker run -it --rm registry.cn-shenzhen.aliyuncs.com/colovu/alpine:latest /bi
 **后台方式运行容器：**
 
 ```shell
-$ docker run -d --name test registry.cn-shenzhen.aliyuncs.com/colovu/alpine:latest tail /dev/stderr
+$ docker run -d --name test colovu/alpine:3.13 tail /dev/stderr
 ```
 
 - `--name test`：命名容器为`test`
 - `-d`：以后台进程方式启动容器
-- `registry.cn-shenzhen.aliyuncs.com/colovu/alpine:latest`：包含TAG信息的镜像地址及名称
+- `colovu/alpine:3.13`：镜像名称及版本标签；标签不指定时默认使用`latest`
 - `tail /dev/stderr`：在容器中执行`tail /dev/stderr`命令，以防止容器直接退出
 
 
@@ -98,7 +100,8 @@ $ docker exec -it test /bin/bash
 
 ## 更新记录
 
-- 3.12、latest
+- 3.13、latest
+- 3.12
 
 
 ----
